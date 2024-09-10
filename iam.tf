@@ -60,20 +60,19 @@ resource "aws_iam_role_policy_attachment" "AmazonEBSCSIDriverPolicy" {
 #oidc
 
 resource "aws_iam_role" "eks_oidc" {
-  name = "eks_oidc"
+  name = "eks-oidc"
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
       {
         Effect = "Allow",
-        "Action" : "sts:AssumeRoleWithWebIdentity",
+        Action = "sts:AssumeRoleWithWebIdentity",
         Principal = {
-          Federated = [ aws_iam_openid_connect_provider.eks-oidc.arn ]
+          Federated = aws_iam_openid_connect_provider.eks-oidc.arn
         },
         Condition = {
           StringEquals = {
-            #"${replace(aws_iam_openid_connect_provider.eks-oidc.url, "https://", "")}:sub" = "system:serviceaccount:default:aws-test"
-            "aws_iam_openid_connect_provider.eks-oidc.url:sub" = "system:serviceaccount:default:aws-test"
+            "aws_iam_openid_connect_provider.eks-oidc.url:sub" = "system:serviceaccount:default:my-service-account"
           }
         }
       }
@@ -82,16 +81,15 @@ resource "aws_iam_role" "eks_oidc" {
 }
 
 resource "aws_iam_policy" "eks-oidc-policy" {
-  name = "test-policy"
+  name = "Secrets-policy"
 
   policy = jsonencode({
     Statement = [{
+      Effect = "Allow",
       Action = [
-        "s3:ListAllMyBuckets",
-        "s3:GetBucketLocation",
-        "*"
-      ]
-      Effect   = "Allow"
+        "secretsmanager:DescribeSecret",
+        "secretsmanager:GetSecretValue"
+      ],
       Resource = "*"
     }]
     Version = "2012-10-17"
