@@ -4,7 +4,7 @@ resource "aws_eks_cluster" "eks" {
   count    = "1"
   name     = "mycluster"
   role_arn = aws_iam_role.eksclusterrole.arn
-  #version = "1.29"
+  version  = "1.29"
 
   upgrade_policy {
     support_type = "STANDARD"
@@ -54,10 +54,10 @@ resource "aws_eks_node_group" "spot" {
   node_group_name = "myspotnodes"
   node_role_arn   = aws_iam_role.eksnoderole.arn
   subnet_ids      = [aws_subnet.private[0].id, aws_subnet.private[1].id]
-  disk_size       = "30"
+  disk_size       = "80"
   scaling_config {
-    desired_size = 2
-    max_size     = 2
+    desired_size = 4
+    max_size     = 4
     min_size     = 1
   }
 

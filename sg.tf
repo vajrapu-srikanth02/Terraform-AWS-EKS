@@ -25,14 +25,14 @@ resource "aws_security_group" "allow_tls" {
 
 resource "aws_security_group" "cluster_sg" {
   name        = "allow_tlstf"
-  description = "Allow TLS inbound traffic"
+  description = "Node groups to cluster API"
   vpc_id      = aws_vpc.main.id
 
   ingress {
-    description = "Allow_All"
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    description = "Node groups to cluster API"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"] # should be specific IP
   }
 

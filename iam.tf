@@ -72,7 +72,7 @@ resource "aws_iam_role" "eks_oidc" {
         },
         Condition = {
           StringEquals = {
-            "aws_iam_openid_connect_provider.eks-oidc.url:sub" = "system:serviceaccount:default:my-service-account"
+            "aws_iam_openid_connect_provider.eks-oidc.url:sub" = "system:serviceaccount:hipstershop:my-service-account"
           }
         }
       }
@@ -90,7 +90,7 @@ resource "aws_iam_policy" "eks-oidc-policy" {
         "secretsmanager:DescribeSecret",
         "secretsmanager:GetSecretValue"
       ],
-      Resource = "*"
+      Resource = "arn:aws:secretsmanager:us-east-1:608782704145:secret:my-registry-secret-wTqYoT"
     }]
     Version = "2012-10-17"
   })
